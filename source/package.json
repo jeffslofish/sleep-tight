@@ -25,5 +25,8 @@
       "icon": "resources/icon.icns",
       "target": "dmg"
     }
+  },
+  "dependencies": {
+    "menubar": "^5.1.0"
   }
 }
