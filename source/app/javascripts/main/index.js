@@ -26,6 +26,35 @@ class GlobalConsoleLogSleeper {
     }, milliseconds);
   }
 }
+class SleepModeSleeper {
+  constructor() {
+    this.timer = new SingleTimerDirector();
+  }
+
+  sleepIn(milliseconds) {
+    console.log(`Sleep-Mode: Sleeping in '${milliseconds}' milliseconds.`);
+    this.timer.startNew(function() {
+      console.log(`Sleep-Mode: actually going to sleep after '${milliseconds}' milliseconds.`);
+      try {
+        require('sleep-mode')(function (err, stderr, stdout) {
+            /* At least on a Mac, stderr gives a message of
+            'Sleeping now...' but it's not actually a problem. */
+            if(err) {
+              console.log('err: ', err);
+            }
+            if(stderr) {
+              console.log('stderr: ', stderr);
+            }
+            if (!err && !stderr) {
+                console.log(stdout);
+            }
+        });
+      } catch (caughtError) {
+        console.log(caughtError);
+      }
+    }, milliseconds);
+  }
+}
 class SingleTimerDirector {
   constructor() {
     this.activeTimer = null;
@@ -81,6 +110,7 @@ class HardcodedMenuProvider {
   }
   buildMenu() {
     var menu = new Menu();
+    menu.append(this.buildSleepMenuItem(0.05));
     menu.append(this.buildSleepMenuItem(0.1));
     menu.append(this.buildSleepMenuItem(0.12));
     menu.append(this.buildSleepMenuItem(1));
@@ -102,7 +132,7 @@ mb.on('ready', function ready () {
   // your app code here
 
   mb.showWindow = mb.hideWindow;
-  var menuProvider = new HardcodedMenuProvider(new GlobalConsoleLogSleeper());
+  var menuProvider = new HardcodedMenuProvider(new SleepModeSleeper());
   mb.tray.setContextMenu(menuProvider.buildMenu());
 
 })
