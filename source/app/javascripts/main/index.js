@@ -16,11 +16,32 @@ var mb = menubar({
 
 class GlobalConsoleLogSleeper {
   constructor() {
+    this.timer = new SingleTimerDirector();
   }
-  sleepIn(howLong) {
-    console.log(`Sleeping in '${howLong}'.`)
+
+  sleepIn(milliseconds) {
+    console.log(`Sleeping in '${milliseconds}' milliseconds.`);
+    this.timer.startNew(function() {
+      console.log(`Pseudo going to sleep after '${milliseconds}' milliseconds.`)
+    }, milliseconds);
   }
 }
+class SingleTimerDirector {
+  constructor() {
+    this.activeTimer = null;
+  }
+  startNew(callback, milliseconds) {
+    this.stopActive();
+    this.activeTimer = setTimeout(callback, milliseconds);
+    return this.activeTimer;
+  }
+  stopActive() {
+    if(this.activeTimer) {
+      clearTimeout(this.activeTimer);
+    }
+  }
+}
+
 class HardcodedMenuProvider {
   constructor(sleeper) {
     this.sleeper = sleeper;
@@ -32,11 +53,13 @@ class HardcodedMenuProvider {
     // Atom seems to lose `this` context when passed directly from a click event
     // hence the `context` parameter.
     var reference = context.meta[itemId];
-    if(reference && reference.timespan) {
-      context.sleeper.sleepIn(reference.timespan);
+    if(reference && reference.milliseconds) {
+      context.sleeper.sleepIn(reference.milliseconds);
     }
   }
-
+  minutesToMilliseconds(minutes) {
+    return minutes * 1000 * 60;
+  }
   buildSleepMenuItem(minutes) {
     const id = `sleepIn${minutes}`;
     var ch = this.clickHandler;
@@ -52,12 +75,15 @@ class HardcodedMenuProvider {
     });
     this.meta[id] = {
       item: item,
-      timespan: minutes
+      milliseconds: this.minutesToMilliseconds(minutes),
     };
     return item;
   }
   buildMenu() {
     var menu = new Menu();
+    menu.append(this.buildSleepMenuItem(0.1));
+    menu.append(this.buildSleepMenuItem(0.12));
+    menu.append(this.buildSleepMenuItem(1));
     menu.append(this.buildSleepMenuItem(15));
     menu.append(this.buildSleepMenuItem(30));
     menu.append(this.buildSleepMenuItem(45));
