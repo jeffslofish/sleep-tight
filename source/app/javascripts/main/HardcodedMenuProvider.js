@@ -19,14 +19,17 @@ class HardcodedMenuProvider {
   minutesToMilliseconds(minutes) {
     return minutes * 1000 * 60;
   }
-  buildSleepMenuItem(minutes) {
+  buildSleepMenuItem(minutes, isVisible) {
     const id = `sleepIn${minutes}`;
+    isVisible = isVisible === undefined ? true : isVisible;
     var ch = this.clickHandler;
     var self = this;
     var item = new MenuItem({
       label: `Sleep in ${minutes} minutes`,
       type: 'radio',
       id: id,
+      checked: false,
+      visible: isVisible,
       // Seems to lose `this` context when passed directly, so this wraps it
       click: function(clickedItem, focusedWindow) {
         ch(clickedItem, focusedWindow, self, id);
@@ -40,6 +43,9 @@ class HardcodedMenuProvider {
   }
   buildMenu() {
     var menu = new Menu();
+    // This invisible item prevents a real item from
+    // being automatically selected before it's been pressed.
+    menu.append(this.buildSleepMenuItem(0.01, false));
     menu.append(this.buildSleepMenuItem(0.05));
     menu.append(this.buildSleepMenuItem(0.1));
     menu.append(this.buildSleepMenuItem(0.12));
