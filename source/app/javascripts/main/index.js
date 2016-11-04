@@ -55,21 +55,6 @@ class SleepModeSleeper {
     }, milliseconds);
   }
 }
-class SingleTimerDirector {
-  constructor() {
-    this.activeTimer = null;
-  }
-  startNew(callback, milliseconds) {
-    this.stopActive();
-    this.activeTimer = setTimeout(callback, milliseconds);
-    return this.activeTimer;
-  }
-  stopActive() {
-    if(this.activeTimer) {
-      clearTimeout(this.activeTimer);
-    }
-  }
-}
 
 class HardcodedMenuProvider {
   constructor(sleeper) {

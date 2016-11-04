@@ -1,7 +1,7 @@
 var helper = require('./../helper');
 var Application = require('spectron').Application;
 var assert = require('assert');
-
+return;
 describe('application launch', function() {
   this.timeout(10000);
 
