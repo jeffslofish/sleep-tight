@@ -38,3 +38,4 @@ jspm_packages
 
 # Bozon builds directory
 source/builds/*
+source/.tmp/*
