@@ -42,9 +42,15 @@ class HardcodedMenuProvider {
     return item;
   }
   buildMenu() {
-    var menu = new Menu();
+    var fullMenu = new Menu();
     // This invisible item prevents a real item from
     // being automatically selected before it's been pressed.
+    var sleepSubMenuItem = this.buildSleepSubMenuItem();
+    fullMenu.append(sleepSubMenuItem);
+    return fullMenu;
+  }
+  buildSleepSubMenuItem() {
+    var menu = new Menu();
     menu.append(this.buildSleepMenuItem(0.01, false));
     menu.append(this.buildSleepMenuItem(0.05));
     menu.append(this.buildSleepMenuItem(0.1));
@@ -56,8 +62,10 @@ class HardcodedMenuProvider {
     menu.append(this.buildSleepMenuItem(60));
     menu.append(this.buildSleepMenuItem(75));
     menu.append(this.buildSleepMenuItem(90));
-
-    return menu;
+    return new MenuItem({
+      label: "Sleep",
+      submenu: menu
+    });
   }
 }
 module.exports = HardcodedMenuProvider;
