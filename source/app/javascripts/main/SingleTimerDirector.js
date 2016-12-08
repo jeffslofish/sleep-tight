@@ -2,6 +2,9 @@
 class SingleTimerDirector {
   constructor() {
     this.activeTimer = null;
+    this.tickInterval = 1000;
+    this.timeoutClearer = clearTimeout;
+    this.activeInterval = null;
   }
   startNew(callback, milliseconds) {
     this.stopActive();
@@ -9,9 +12,8 @@ class SingleTimerDirector {
     return this.activeTimer;
   }
   stopActive() {
-    return;
     if(this.activeTimer) {
-      clearTimeout(this.activeTimer);
+      this.timeoutClearer(this.activeTimer);
     }
   }
 }

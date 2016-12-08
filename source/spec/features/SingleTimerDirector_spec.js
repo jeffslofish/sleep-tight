@@ -37,4 +37,64 @@ describe('#startNew()', function() {
       done();
     }, 0.25);
   });
+  it(`sets activeInterval`, function() {
+    var director = new SingleTimerDirector();
+    assert.isNull(director.activeInterval);
+    director.startNew(function() {
+      console.log("startNew:", director.activeInterval);
+      assert.isNotNull(director.activeInterval);
+    }, 100);
+    assert.fail("what the heck")
+    setTimeout(function() {
+      done();
+    }, 1000);
+  });
+});
+describe('#timeoutClearer', function() {
+  it(`defaults to global clearTimeout method`, function() {
+    var director = new SingleTimerDirector();
+    assert.equal(clearTimeout, director.timeoutClearer)
+  });
+});
+describe('#stopActive', function() {
+  it(`calls timeoutClearer with the activeTimer`, function() {
+    var director = new SingleTimerDirector();
+    director.activeTimer = "does it really matter if this is a timer?";
+    var wasClearTimeoutCalled = false;
+    director.timeoutClearer = function(toClear) {
+      wasClearTimeoutCalled = true;
+      assert.equal(director.activeTimer, toClear);
+    };
+
+    setTimeout(function() {
+      assert.isTrue(wasClearTimeoutCalled);
+      done();
+    }, 0.25);
+  });
+  it(`does not call timeoutClearer if activeTimer is null`, function() {
+    var director = new SingleTimerDirector();
+    director.activeTimer = null;
+    var wasClearTimeoutCalled = false;
+    director.timeoutClearer = function(toClear) {
+      wasClearTimeoutCalled = true;
+      assert.equal(director.activeTimer, toClear);
+    };
+
+    setTimeout(function() {
+      assert.isFalse(wasClearTimeoutCalled);
+      done();
+    }, 0.25);
+  });
+});
+describe('activeInterval', function() {
+  it(`defaults to null`, function() {
+    var director = new SingleTimerDirector();
+    assert.isNull(director.activeInterval);
+  });
+});
+describe('tickInterval', function() {
+  it(`defaults to 1000ms`, function() {
+    var director = new SingleTimerDirector();
+    assert.equal(1000, director.tickInterval);
+  });
 });
