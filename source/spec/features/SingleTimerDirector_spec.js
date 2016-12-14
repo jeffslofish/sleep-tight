@@ -13,7 +13,6 @@ describe('#startNew()', function() {
     var director = new SingleTimerDirector();
     var called = false;
     director.startNew(function() {
-      console.log(`startNew callback invoked`)
       called = true;
       assert.isNotNull(director.activeTimer);
     }, 0.1);
@@ -37,18 +36,35 @@ describe('#startNew()', function() {
       done();
     }, 0.25);
   });
-  it(`sets activeInterval`, function() {
+  it(`sets activeInterval`, function(done) {
     var director = new SingleTimerDirector();
     assert.isNull(director.activeInterval);
     director.startNew(function() {
-      console.log("startNew:", director.activeInterval);
       assert.isNotNull(director.activeInterval);
-    }, 100);
-    assert.fail("what the heck")
+    }, 0);
     setTimeout(function() {
+      assert.isNotNull(director.activeInterval);
+      done();
+    }, 0.25);
+  });
+  it(`calls onTick twice when interval Ticks is 250ms and timer is for 500ms`, function(done) {
+    var director = new SingleTimerDirector();
+    var callCount = 0;
+    director.tickInterval = 250;
+    director.onTick = function() {
+      console.log(`onTick ${callCount}`);
+      callCount = callCount + 1;
+    };
+    director.startNew(function() {
+      console.log("donezo");
+    }, 450);
+
+    setTimeout(function() {
+      console.log(`setTimout: callCount: ${callCount}`);
+      assert.equal(2, callCount);
       done();
     }, 1000);
-  });
+  })
 });
 describe('#timeoutClearer', function() {
   it(`defaults to global clearTimeout method`, function() {
@@ -56,8 +72,14 @@ describe('#timeoutClearer', function() {
     assert.equal(clearTimeout, director.timeoutClearer)
   });
 });
+describe('#intervalClearer', function() {
+  it(`defaults to global clearInterval method`, function() {
+    var director = new SingleTimerDirector();
+    assert.equal(clearInterval, director.intervalClearer);
+  });
+});
 describe('#stopActive', function() {
-  it(`calls timeoutClearer with the activeTimer`, function() {
+  it(`calls timeoutClearer with the activeTimer`, function(done) {
     var director = new SingleTimerDirector();
     director.activeTimer = "does it really matter if this is a timer?";
     var wasClearTimeoutCalled = false;
@@ -66,12 +88,14 @@ describe('#stopActive', function() {
       assert.equal(director.activeTimer, toClear);
     };
 
+    director.stopActive();
+
     setTimeout(function() {
       assert.isTrue(wasClearTimeoutCalled);
       done();
     }, 0.25);
   });
-  it(`does not call timeoutClearer if activeTimer is null`, function() {
+  it(`does not call timeoutClearer if activeTimer is null`, function(done) {
     var director = new SingleTimerDirector();
     director.activeTimer = null;
     var wasClearTimeoutCalled = false;
@@ -79,11 +103,29 @@ describe('#stopActive', function() {
       wasClearTimeoutCalled = true;
       assert.equal(director.activeTimer, toClear);
     };
+    director.stopActive();
 
     setTimeout(function() {
       assert.isFalse(wasClearTimeoutCalled);
       done();
     }, 0.25);
+  });
+  it(`calls intervalClearer with the activeInterval`, function(done) {
+    var director = new SingleTimerDirector();
+    director.stopActive();
+    done();
+  });
+  it(`does not call intervalClearer if activeInterval is null`, function(done) {
+    var director = new SingleTimerDirector();
+    director.activeInterval = null;
+    director.intervalClearer = function(toClear) {
+      assert.fail("Shouldn't have been called");
+    };
+    director.stopActive();
+
+    setTimeout(function() {
+      done();
+    }, 1);
   });
 });
 describe('activeInterval', function() {
@@ -91,6 +133,7 @@ describe('activeInterval', function() {
     var director = new SingleTimerDirector();
     assert.isNull(director.activeInterval);
   });
+
 });
 describe('tickInterval', function() {
   it(`defaults to 1000ms`, function() {
