@@ -6,13 +6,13 @@ class SingleTimerDirector {
     this.timeoutClearer = clearTimeout;
     this.activeInterval = null;
     this.intervalClearer = clearInterval;
+    this.ticks = 0;
   }
   startNew(callback, milliseconds) {
-    var self = this;
     this.stopActive();
+    var self = this;
 
     this.activeInterval = this.startInterval();
-
     this.activeTimer = setTimeout(function() {
       self.stopActive();
       callback();
@@ -28,7 +28,12 @@ class SingleTimerDirector {
     }
   }
   startInterval() {
-    return setInterval(this.onTick, this.tickInterval);
+    var self = this;
+    self.ticks = 0;
+    return setInterval(function() {
+      self.ticks++;
+      self.onTick();
+    }, this.tickInterval);
   }
   onTick() {
 

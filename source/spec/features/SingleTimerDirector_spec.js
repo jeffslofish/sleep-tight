@@ -27,7 +27,6 @@ describe('#startNew()', function() {
     var wasStopActiveCalled = false;
     director.stopActive = function() {
       wasStopActiveCalled = true;
-      assert.isNull(director.activeTimer);
     };
     director.startNew(function(){}, 0);
 
@@ -47,23 +46,21 @@ describe('#startNew()', function() {
       done();
     }, 0.25);
   });
-  it(`calls onTick twice when interval Ticks is 250ms and timer is for 500ms`, function(done) {
+  it(`calls onTick twice when interval Ticks is 25ms and timer is for 60ms for minor swing time`, function(done) {
     var director = new SingleTimerDirector();
     var callCount = 0;
-    director.tickInterval = 250;
+    director.tickInterval = 25;
     director.onTick = function() {
-      console.log(`onTick ${callCount}`);
       callCount = callCount + 1;
     };
     director.startNew(function() {
-      console.log("donezo");
-    }, 450);
+
+    }, 60);
 
     setTimeout(function() {
-      console.log(`setTimout: callCount: ${callCount}`);
       assert.equal(2, callCount);
       done();
-    }, 1000);
+    }, 75);
   })
 });
 describe('#timeoutClearer', function() {
