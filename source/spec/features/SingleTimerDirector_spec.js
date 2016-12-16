@@ -1,7 +1,7 @@
 var SingleTimerDirector = require('./../../app/javascripts/main/SingleTimerDirector.js');
 var assert = require('chai').assert;
 
-describe('construtor', function() {
+describe('constructor', function() {
   it('has a null activeTimer property', function() {
     var director = new SingleTimerDirector();
     assert.isNull(director.activeTimer);
