@@ -41,6 +41,19 @@ class HardcodedMenuProvider {
     };
     return item;
   }
+  buildRemainingTimeMenuItem() {
+    return new MenuItem({
+      label: `0:00 remaining`,
+      //id: id,
+      checked: false,
+      visible: true,
+      enabled: true,
+      click: function(clickedItem, focusedWindow) {
+        console.log("clicked remaining menu item");
+      },
+    });
+  }
+
   buildMenu() {
     var fullMenu = new Menu();
     // This invisible item prevents a real item from

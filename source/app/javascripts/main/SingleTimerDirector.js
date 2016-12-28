@@ -33,7 +33,7 @@ class SingleTimerDirector {
     return setInterval(function() {
       self.ticks++;
       self.onTick();
-    }, this.tickInterval);
+    }, self.tickInterval);
   }
   onTick() {
 
