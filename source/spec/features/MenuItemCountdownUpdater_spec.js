@@ -1,4 +1,5 @@
-var MenuItemCountdownUpdater = require('./../../app/javascripts/main/MenuItemCountdownUpdater.js');'use strict'
+'use strict';
+var MenuItemCountdownUpdater = require('./../../app/javascripts/main/MenuItemCountdownUpdater.js');
 const {MenuItem} = require('electron');
 var assert = require('chai').assert;
 
@@ -7,12 +8,11 @@ describe('constructor', function() {
 });
 
 describe('formatTime', function() {
-  it(`returns 10:43:58 when given milliseconds of 386380000000`, function() {
+  it(`returns 1:43:58 when given milliseconds of 92638000`, function() {
     var updater = new MenuItemCountdownUpdater();
+    var result = updater.formatTime(92638000);
 
-    var result = updater.formatTime(386380000000);
-
-    assert.equal("10:43:58", result);
+    assert.equal("1:43:58", result);
   });
 });
 

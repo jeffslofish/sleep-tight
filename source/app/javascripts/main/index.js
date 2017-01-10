@@ -1,3 +1,4 @@
+'use strict';
 var electron, path, json;
 
 path = require('path');
