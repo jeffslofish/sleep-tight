@@ -3,3 +3,8 @@ require('electron').ipcRenderer.on('loaded' , function(event, data) {
   document.getElementById('details').innerHTML = 'built with Electron v' + data.electronVersion;
   document.getElementById('versions').innerHTML = 'running on Node v' + data.nodeVersion + ' and Chromium v' + data.chromiumVersion;
 });
+
+
+require('electron').ipcRenderer.on('update-remaining-time', function(event, data) {
+  console.log("update-remaining-time called", arguments);
+});

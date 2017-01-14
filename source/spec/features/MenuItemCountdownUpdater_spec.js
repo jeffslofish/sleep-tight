@@ -16,11 +16,11 @@ describe('formatTime', function() {
   });
 });
 
-describe('setMenuItemTextToTime', function() {
-  it(`sets a MenuItem's text to '10:43:58' when passed '10:43:58'`, function() {
+describe('setMenuItemLabelToTime', function() {
+  it(`sets a MenuItem's label to '10:43:58' when passed '10:43:58'`, function() {
     var menuItem = {};
     var updater = new MenuItemCountdownUpdater();
-    updater.setMenuItemTextToTime(menuItem, "10:43:58");
-    assert.equal("10:43:58", menuItem.text);
+    updater.setMenuItemLabelToTime(menuItem, "10:43:58");
+    assert.equal("10:43:58", menuItem.label);
   });
 })

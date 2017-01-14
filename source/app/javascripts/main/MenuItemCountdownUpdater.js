@@ -9,8 +9,8 @@ class MenuItemCountdownUpdater {
     var hours=parseInt((milliseconds/(1000*60*60))%24);
     return `${hours}:${minutes}:${seconds}`;
   }
-  setMenuItemTextToTime(menuItem, timeString) {
-    menuItem.text = timeString;
+  setMenuItemLabelToTime(menuItem, timeString) {
+    menuItem.label = timeString;
   }
 }
 module.exports = MenuItemCountdownUpdater;
