@@ -12,15 +12,17 @@ describe('#startNew()', function() {
   it(`sets activeTimer to a Timer instance`, function(done) {
     var director = new SingleTimerDirector();
     var called = false;
+    director.tickInterval = 50;
     director.startNew(function() {
+      console.log("callback initiated");
       called = true;
       assert.isNotNull(director.activeTimer);
-    }, 0.1);
+    }, 100);
 
     setTimeout(function() {
       assert.isTrue(called, '#startNew() callback was not called.');
       done();
-    }, 0.25);
+    }, 200);
   });
   it(`calls stopActive() before setting new timer`, function(done) {
     var director = new SingleTimerDirector();
@@ -46,7 +48,7 @@ describe('#startNew()', function() {
       done();
     }, 0.25);
   });
-  it(`calls onTick twice when interval Ticks is 25ms and timer is for 60ms for minor swing time`, function(done) {
+  it(`calls onTick thrice when interval Ticks is 25ms and timer is for 60ms, twice for time, and lastly for the 'final' tick`, function(done) {
     var director = new SingleTimerDirector();
     var callCount = 0;
     director.tickInterval = 25;
@@ -58,7 +60,7 @@ describe('#startNew()', function() {
     }, 60);
 
     setTimeout(function() {
-      assert.equal(2, callCount);
+      assert.equal(3, callCount);
       done();
     }, 75);
   })

@@ -25,12 +25,12 @@ mb.on('ready', function ready () {
   var remainingTimeMenuItem = menuProvider.buildRemainingTimeMenuItem();
   menu.append(remainingTimeMenuItem);
   
-  sleeper.timer.onTick = function() {
-    // TODO: Default javascript timer doesn't support
-    // time remaining/elapsed. Will need to implement 
-    // custom implementation for remaining time
-    //var remainingMilliseconds = sleeper.timer.getRemainingMilliseconds();
-    //leftUpdater.setMenuItemTextToTime(remainingTimeMenuItem, );
+  sleeper.timer.onTick = function(ms) {
+    var remainingMilliseconds = ms;
+    var formattedRemainingTime = leftUpdater.formatTime(ms);
+    console.log("remaining milliseconds", formattedRemainingTime, ms);
+    // TODO Probably need to update this on another thread?
+    leftUpdater.setMenuItemTextToTime(remainingTimeMenuItem, ms);
   };
   mb.tray.setContextMenu(menu);
 

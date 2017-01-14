@@ -1,6 +1,6 @@
 'use strict';
 var MenuItemCountdownUpdater = require('./../../app/javascripts/main/MenuItemCountdownUpdater.js');
-const {MenuItem} = require('electron');
+
 var assert = require('chai').assert;
 
 describe('constructor', function() {

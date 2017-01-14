@@ -1,4 +1,6 @@
 'use strict'
+const Timer = require('tiny-timer');
+
 class SingleTimerDirector {
   constructor() {
     this.activeTimer = null;
@@ -12,11 +14,20 @@ class SingleTimerDirector {
     this.stopActive();
     var self = this;
 
-    this.activeInterval = this.startInterval();
-    this.activeTimer = setTimeout(function() {
-      self.stopActive();
+    this.activeTimer = new Timer();
+    this.activeInterval = this.startInterval();    
+    
+    this.activeTimer.on('done', function() {
+      console.log("done triggered: ", arguments);
       callback();
-    }, milliseconds);
+    });
+    this.activeTimer.start(milliseconds, this.tickInterval);
+
+    this.timeoutClearer = function() {
+      this.activeTimer.stop();
+    };
+    this.intervalClearer = function() { };
+
     return this.activeTimer;
   }
   stopActive() {
@@ -29,11 +40,10 @@ class SingleTimerDirector {
   }
   startInterval() {
     var self = this;
-    self.ticks = 0;
-    return setInterval(function() {
-      self.ticks++;
-      self.onTick();
-    }, self.tickInterval);
+    this.activeTimer.on('tick', function(ms) {
+      console.log("tick triggered: ", arguments);
+      self.onTick(ms);
+    });
   }
   onTick() {
 
