@@ -11,8 +11,13 @@ const remote = require('electron').remote;
 var menubar = require('menubar');
 var HardcodedMenuProvider = require('./HardcodedMenuProvider.js');
 var MenuItemCountdownUpdater = require('./MenuItemCountdownUpdater.js');
-var SleepModeSleeper = require('./sleepers/SleepModeSleeper.js')
-var mb = menubar({});
+var SleepModeSleeper = require('./sleepers/SleepModeSleeper.js');
+var IconResolver = require('./IconResolver.js');
+
+var iconPath = new IconResolver(process.platform).resolve();
+var mb = menubar({
+  icon:iconPath
+});
 
 var remainingTimeMenuItem;
 var leftUpdater = new MenuItemCountdownUpdater();
