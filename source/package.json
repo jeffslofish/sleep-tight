@@ -29,6 +29,7 @@
   "dependencies": {
     "chai": "^3.5.0",
     "menubar": "^5.2.3",
+    "react-photonkit": "^0.4.1",
     "sleep-mode": "^1.1.0"
   }
 }
