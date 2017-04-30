@@ -41,6 +41,8 @@
     "webpack-node-externals": "^1.2.0"
   },
   "dependencies": {
-    "menubar": "^5.2.3"
+    "chai": "^3.5.0",
+    "menubar": "^5.2.3",
+    "tiny-timer": "^1.1.1"
   }
 }

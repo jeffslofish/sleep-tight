@@ -7,6 +7,7 @@ import Root from './routes'
 
 import store from './store'
 
+
 const render = (Component) => {
 	ReactDOM.render(
 		<AppContainer>
