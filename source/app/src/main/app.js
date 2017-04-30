@@ -17,7 +17,17 @@ const {
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+function initMenubar() {
+	var menubar = require('menubar');
+	//var HardcodedMenuProvider = require('./HardcodedMenuProvider.js');
+	//var MenuItemCountdownUpdater = require('./MenuItemCountdownUpdater.js');
+	var IconResolver = require('./js/core/IconResolver.js');
 
+	var iconPath = new IconResolver(process.platform).resolve();
+	var mb = menubar({
+		icon:iconPath
+	});
+}
 /** This function will create the mainWindow */
 function createWindow() {
   // Create the browser window.
@@ -56,7 +66,10 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', function() {
+	//createWindow
+	initMenubar();
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -71,7 +84,7 @@ app.on('activate', function() {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
-		createWindow();
+		//createWindow();
   }
 });
 
