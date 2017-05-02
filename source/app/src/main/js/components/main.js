@@ -13,6 +13,8 @@ import AvPause from 'material-ui/svg-icons/av/pause.js';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow.js';
 import AvReplay from 'material-ui/svg-icons/av/replay.js';
 
+import Remaining from './remaining'
+
 
 class Main extends Component {
 	render() {
@@ -36,19 +38,7 @@ class Main extends Component {
 							<Slider value={s.sliderValue} />
 						</div>
 						<div style={{textAlign:"center"}}>
-							<div>{s.leftFormattedTime}</div>
-							<div>
-								{s.started ?
-								<IconButton tooltip="Pause" visible={s.started}>
-									<AvPause />
-								</IconButton> :
-								<IconButton tooltip="Start" visible={!s.started}>
-									<AvPlayArrow />
-								</IconButton>}
-								<IconButton tooltip="Restart">
-									<AvReplay />
-								</IconButton>
-							</div>
+							<Remaining />
 						</div>
 					</div>
 				</MuiThemeProvider>
