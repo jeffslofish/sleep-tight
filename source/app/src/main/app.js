@@ -14,6 +14,7 @@ const {
 } = require('electron-devtools-installer');
 
 
+var hasBeenSetup = false;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 //let mainWindow;
@@ -28,15 +29,16 @@ function initMenubar() {
 	var mb = menubar({
 		dir:__dirname,
 		icon:iconPath,
+		preloadWindow:true,
 		width: 1024, height: 768
+		//width:280, height:240
 	});
-	var hasBeenSetup = false;
 	mb.on('ready', function ready () {
 		console.log('app is ready');
 	});
 	mb.on('after-show', function afterShow() {
 		if(hasBeenSetup) return;
-		
+
 		if(process.env.NODE_ENV === 'development') {
 			// Open the DevTools.
 			setupWindow(mb.window);

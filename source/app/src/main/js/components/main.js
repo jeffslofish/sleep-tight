@@ -18,26 +18,33 @@ class Main extends Component {
 	render() {
 		// Note to self, don't forget to run dev & hot!
 		console.log("main.js:render()");
+		var s = {
+			sleep: true,
+			sliderValue: 0.5,
+			leftFormattedTime: "60:00",
+			started: true
+		};
 		return(
 			<div className="row main">
 				<MuiThemeProvider>
 					<div style={{width:"90%",margin:"0 auto"}}>
 						<div>
-							<RaisedButton label="Shut Down" />
-							<RaisedButton label="Sleep" primary={true} />
+							<RaisedButton label="Shut Down" primary={!s.sleep} />
+							<RaisedButton label="Sleep" primary={s.sleep} />
 						</div>
 						<div>
-							<Slider value="0.5" />
+							<Slider value={s.sliderValue} />
 						</div>
 						<div style={{textAlign:"center"}}>
-							<div>60:00:00</div>
+							<div>{s.leftFormattedTime}</div>
 							<div>
-								<IconButton tooltip="Pause">
+								{s.started ?
+								<IconButton tooltip="Pause" visible={s.started}>
 									<AvPause />
-								</IconButton>
-								<IconButton tooltip="Start">
+								</IconButton> :
+								<IconButton tooltip="Start" visible={!s.started}>
 									<AvPlayArrow />
-								</IconButton>
+								</IconButton>}
 								<IconButton tooltip="Restart">
 									<AvReplay />
 								</IconButton>
