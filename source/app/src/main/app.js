@@ -24,35 +24,29 @@ function initMenubar() {
 	var IconResolver = require('./js/core/IconResolver.js');
 
 	var iconPath = new IconResolver(process.platform).resolve();
-	var mainWindow = createWindow();
-	console.log("__dirname",__dirname);
+	
 	var mb = menubar({
 		dir:__dirname,
-		icon:iconPath
+		icon:iconPath,
+		width: 1024, height: 768
 	});
+	var hasBeenSetup = false;
 	mb.on('ready', function ready () {
-		console.log('app is ready')
+		console.log('app is ready');
 	});
 	mb.on('after-show', function afterShow() {
-		console.log('after-show');
+		if(hasBeenSetup) return;
+		
 		if(process.env.NODE_ENV === 'development') {
 			// Open the DevTools.
+			setupWindow(mb.window);
 			mb.window.webContents.openDevTools();
 		}
+		hasBeenSetup = true;
 	});
 }
 /** This function will create the mainWindow */
-function createWindow() {
-  // Create the browser window.
-  var mainWindow = new BrowserWindow({width: 1024, height: 768, show:false});
-
-	// and load the index.html of the app.
-	mainWindow.loadURL(url.format({
-		pathname: path.join(__dirname, 'index.html'),
-		protocol: 'file:',
-		slashes: true,
-	}));
-
+function setupWindow(mainWindow) {
   if(process.env.NODE_ENV === 'development') {
 		// Open the DevTools.
 		mainWindow.webContents.openDevTools();
@@ -64,9 +58,7 @@ function createWindow() {
 		installExtension(REDUX_DEVTOOLS)
 			.then((name) => console.log(`Added Extension:  ${name}`))
 			.catch((err) => console.log('An error occurred: ', err));
-
-  }
-	return mainWindow;
+	}
 }
 
 // This method will be called when Electron has finished

@@ -7,14 +7,12 @@ import Root from './routes'
 
 import store from './store'
 
+import Main from './components/main.js'
 
 const render = (Component) => {
+	console.log("index.js")
 	ReactDOM.render(
-		<AppContainer>
-			<Provider store={store}>
-				<Component />
-			</Provider>
-		</AppContainer>,
+		<Main/>,
 		document.getElementById('root')
 	)
 }
