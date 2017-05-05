@@ -41,7 +41,7 @@ class SingleTimerDirector {
   startInterval() {
     var self = this;
     this.activeTimer.on('tick', function(ms) {
-      console.log("tick triggered: ", arguments);
+      //console.log("tick triggered: ", arguments);
       self.onTick(ms);
     });
   }

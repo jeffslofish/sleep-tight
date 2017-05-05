@@ -7,69 +7,125 @@ import IconButton from 'material-ui/IconButton';
 import AvPause from 'material-ui/svg-icons/av/pause.js';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow.js';
 import AvReplay from 'material-ui/svg-icons/av/replay.js';
+import SingleTimerDirector from '../../main/js/core/SingleTimerDirector'
 
 function setup() {
-	const enzymeWrapper = shallow( < Remaining / > )
+	const wrapper = shallow( < Remaining /> )
 
-	return enzymeWrapper;
+	return wrapper;
 }
 
 describe('components', () => {
 	describe('Remaining', () => {
 		it('should render AvPlayArrow when state.started is false', () => {
-			const enzymeWrapper = setup();
-			enzymeWrapper.setState({
+			const wrapper = setup();
+			wrapper.setState({
 				started: false
 			});
-			expect(enzymeWrapper.find('AvPlayArrow').length).toBe(1);
+			expect(wrapper.find('AvPlayArrow').length).toBe(1);
 		});
 		it('should not render AvPlayArrow when state.started is true', () => {
-			const enzymeWrapper = setup();
-			enzymeWrapper.setState({
+			const wrapper = setup();
+			wrapper.setState({
 				started: true
 			});
-			expect(enzymeWrapper.find('AvPlayArrow').length).toBe(0);
+			expect(wrapper.find('AvPlayArrow').length).toBe(0);
 		});
 
 
 		it('should not render AvPause when state.started is false', () => {
-			const enzymeWrapper = setup();
-			enzymeWrapper.setState({
+			const wrapper = setup();
+			wrapper.setState({
 				started: false
 			});
-			expect(enzymeWrapper.find('AvPause').length).toBe(0);
+			expect(wrapper.find('AvPause').length).toBe(0);
 		});
 		it('should render AvPause when state.started is true', () => {
-			const enzymeWrapper = setup();
-			enzymeWrapper.setState({
+			const wrapper = setup();
+			wrapper.setState({
 				started: true
 			});
-			expect(enzymeWrapper.find('AvPause').length).toBe(1);
+			expect(wrapper.find('AvPause').length).toBe(1);
 		});
 
 
 		it('should render AvReplay when state.started is true', () => {
-			const enzymeWrapper = setup();
-			enzymeWrapper.setState({
+			const wrapper = setup();
+			wrapper.setState({
 				started: true
 			});
-			expect(enzymeWrapper.find('AvReplay').length).toBe(1);
+			expect(wrapper.find('AvReplay').length).toBe(1);
 		});
 		it('should render AvReplay when state.started is true', () => {
-			const enzymeWrapper = setup();
-			enzymeWrapper.setState({
+			const wrapper = setup();
+			wrapper.setState({
 				started: true
 			});
-			expect(enzymeWrapper.find('AvReplay').length).toBe(1);
+			expect(wrapper.find('AvReplay').length).toBe(1);
 		});
 
 
-		it('should render #remainingTime containing 33:21 when state.formattedTime is 33:21', () => {
-			const enzymeWrapper = setup();
-			enzymeWrapper.setState({
-				formattedTime: "33:21"
+		it('should render #remainingTime of 00:10:05 when state.remainingMilliseconds is 605000', () => {
+			const wrapper = setup();
+			wrapper.setState({
+				remainingMilliseconds: 605000
 			});
-			expect(enzymeWrapper.find('#remainingTime').text()).toBe("33:21");
+			expect(wrapper.find('#remainingTime').text()).toBe("00:10:05");
+		});
+		it('should render #remainingTime of 00:00:00 when state.remainingMilliseconds is 0', () => {
+			const wrapper = setup();
+			wrapper.setState({
+				remainingMilliseconds: 0
+			});
+			expect(wrapper.find('#remainingTime').text()).toBe("00:00:00");
+		});
+
+		it('should have props.timer equal a default SingleTimerDirector', ()=>{
+			const wrapper = <Remaining />;
+			expect(wrapper.props.timer).toBeDefined();
+			expect(wrapper.props.timer).toBeInstanceOf(SingleTimerDirector);
+		});
+
+		describe('start', ()=> {
+			it('should set state.started to true', ()=> {
+				const wrapper = setup();
+				wrapper.setState({started: false});
+				wrapper.instance().start();
+				expect(wrapper.state().started).toBe(true);
+			});
+			if('should set state.remainingMilliseconds to state.allottedMilliseconds', ()=> {
+				const wrapper = setup(),
+					allottedMilliseconds = 3253;
+				wrapper.setState({started: false, 
+					allottedMilliseconds:allottedMilliseconds});
+				wrapper.instance().start();
+				expect(wrapper.state().allottedMilliseconds)
+					.toBe(allottedMilliseconds);
+			});
+			it('should call props.timer.startNew with state.allottedMilliseconds', ()=> {
+				const allottedMilliseconds = 90210;
+				var shouldBeCalled = jest.fn();
+				var props = {
+					timer:{
+						startNew:shouldBeCalled
+					}
+				};
+				const remaining = shallow(<Remaining timer={props.timer}/>);
+				remaining.setState({
+					allottedMilliseconds:allottedMilliseconds
+				});
+				remaining.instance().start();
+				expect(shouldBeCalled)
+					.toHaveBeenCalledWith(expect.any(Function), allottedMilliseconds);
+			});
+		});
+		describe('tick', ()=> {
+			it('should set state.remainingMilliseconds to the passed parameter value', ()=> {
+				const remaining = shallow(<Remaining/>),
+					expected = 12345;
+				remaining.instance().tick(expected);
+				expect(remaining.state().remainingMilliseconds).toBe(expected);
+			});
 		});
 	})
 })
