@@ -32,7 +32,6 @@ describe('components', () => {
 			expect(wrapper.find('AvPlayArrow').length).toBe(0);
 		});
 
-
 		it('should not render AvPause when state.started is false', () => {
 			const wrapper = setup();
 			wrapper.setState({
