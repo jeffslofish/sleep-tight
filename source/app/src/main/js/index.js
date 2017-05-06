@@ -10,7 +10,6 @@ import store from './store'
 import Main from './components/main.js'
 
 const render = (Component) => {
-	console.log("index.js")
 	ReactDOM.render(
 		<Main/>,
 		document.getElementById('root')

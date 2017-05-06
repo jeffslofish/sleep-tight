@@ -14,7 +14,6 @@ import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow.js';
 import AvReplay from 'material-ui/svg-icons/av/replay.js';
 
 import SingleTimerDirector from '../core/SingleTimerDirector.js';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import _ from 'lodash'
 
@@ -22,10 +21,7 @@ class Remaining extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      formattedTime:"60:00",
       allottedMilliseconds:3600,
-      
-      
       remainingMilliseconds:0
     };
     this.internalTimer = {
@@ -36,7 +32,6 @@ class Remaining extends Component {
       },
       stopActive:()=>{this.props.timer.stopActive()}
     }
-    injectTapEventPlugin();
   }
   tick(milliseconds) {
     this.state.remainingMilliseconds = milliseconds;
@@ -47,6 +42,14 @@ class Remaining extends Component {
       .startNew(()=>{}, this.state.allottedMilliseconds);
     this.state.started = true;
   }
+  pause() {
+    this.state.started = false;
+    this.internalTimer.stopActive()
+  }
+  restart() {
+    this.start();
+  }
+
   parsePad(i) {
     return _.padStart(parseInt(i), 2, "0");
   }
@@ -68,14 +71,16 @@ class Remaining extends Component {
         <div>
           {this.state.started ?
           <IconButton id="pause" 
-            tooltip="Pause">
+            tooltip="Pause"
+            onTouchTap={this.pause()}>
             <AvPause />
           </IconButton> :
           <IconButton id="start" tooltip="Start" 
             onTouchTap={this.start()}>
             <AvPlayArrow />
           </IconButton>}
-          <IconButton id="restart" tooltip="Restart">
+          <IconButton id="restart" tooltip="Restart"
+            onTouchTap={this.restart()}>
             <AvReplay />
           </IconButton>
         </div>

@@ -107,6 +107,7 @@ describe('components', () => {
 				var shouldBeCalled = jest.fn();
 				var props = {
 					timer:{
+						stopActive:jest.fn(),
 						startNew:shouldBeCalled
 					}
 				};
@@ -125,6 +126,55 @@ describe('components', () => {
 					expected = 12345;
 				remaining.instance().tick(expected);
 				expect(remaining.state().remainingMilliseconds).toBe(expected);
+			});
+		});
+
+		describe('pause', ()=> {
+			it('should set state.started to false', ()=> {
+				const wrapper = setup()
+				wrapper.setState({started: true});
+				wrapper.instance().pause()
+				expect(wrapper.state().started).toBe(false);
+			});
+
+			it('should call timer.stopActive', ()=> {
+				var props = {
+					timer:{
+						stopActive:jest.fn(),
+						startNew:jest.fn()
+					}
+				};
+				const wrapper = shallow( < Remaining timer={props.timer} /> );
+				wrapper.instance().pause();
+				expect(props.timer.stopActive).toHaveBeenCalled();
+			});
+		});
+
+		describe('restart', ()=> {
+			it('should set state.remainingMilliseconds to state.allottedMilliseconds', ()=> {
+				var props = {
+					timer:{
+						stopActive:jest.fn(),
+						startNew:jest.fn()
+					}
+				};
+				const wrapper = shallow( < Remaining timer={props.timer} /> ),
+					allottedMilliseconds = 65000;
+				wrapper.setState({allottedMilliseconds: allottedMilliseconds
+					, remainingMilliseconds: 0});
+				wrapper.instance().restart();
+				expect(wrapper.state().remainingMilliseconds).toBe(allottedMilliseconds);
+			});
+			it('should call timer.startNew()', ()=> {
+				var props = {
+					timer:{
+						stopActive:jest.fn(),
+						startNew:jest.fn()
+					}
+				};
+				const wrapper = shallow( < Remaining timer={props.timer} /> );
+				wrapper.instance().restart();
+				expect(props.timer.startNew).toHaveBeenCalled();
 			});
 		});
 	})

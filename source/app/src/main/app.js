@@ -13,6 +13,8 @@ const {
 	REDUX_DEVTOOLS
 } = require('electron-devtools-installer');
 
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 var hasBeenSetup = false;
 // Keep a global reference of the window object, if you don't, the window will
