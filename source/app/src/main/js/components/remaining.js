@@ -77,7 +77,7 @@ class Remaining extends Component {
       started: true
     });
     this.internalTimer
-      .startNew(()=>{}, this.state.allottedMilliseconds);
+      .startNew(this.props.onFinished, this.state.allottedMilliseconds);
   }
   pause() {
     this.setState({
@@ -131,7 +131,8 @@ class Remaining extends Component {
 }
 
 Remaining.defaultProps = {
-  timer:new SingleTimerDirector()
+  timer:new SingleTimerDirector(),
+  onFinished:function() { console.log("default unfinished"); }
 };
 
 export default Remaining;

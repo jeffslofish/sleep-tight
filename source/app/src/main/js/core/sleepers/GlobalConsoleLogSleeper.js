@@ -4,7 +4,9 @@ class GlobalConsoleLogSleeper {
   constructor() {
     this.timer = new SingleTimerDirector();
   }
-
+  sleepNow() {
+    console.log(`Pseudo going to sleep now.`);
+  }
   sleepIn(milliseconds) {
     console.log(`Sleeping in '${milliseconds}' milliseconds.`);
     this.timer.startNew(function() {

@@ -118,6 +118,22 @@ describe('components', () => {
 				expect(shouldBeCalled)
 					.toHaveBeenCalledWith(expect.any(Function), allottedMilliseconds);
 			});
+			it('should pass props.onFinished to startNew as callback', ()=> {const allottedMilliseconds = 90210;
+				var props = {
+					timer:{
+						stopActive:jest.fn(),
+						startNew:jest.fn()
+					},
+					onFinished:jest.fn()
+				};
+				const remaining = shallow(<Remaining {...props}/>);
+				remaining.setState({
+					allottedMilliseconds:allottedMilliseconds
+				});
+				remaining.instance().start();
+				expect(props.timer.startNew)
+					.toHaveBeenCalledWith(props.onFinished, allottedMilliseconds);
+			});
 		});
 		describe('tick', ()=> {
 			it('should set state.remainingMilliseconds to the passed parameter value', ()=> {

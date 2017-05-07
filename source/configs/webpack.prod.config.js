@@ -25,6 +25,7 @@ module.exports = {
 			},
 		}],
 	},
+	target: 'electron-renderer',
 	plugins: [
 		new CopyWebpackPlugin([
 			{

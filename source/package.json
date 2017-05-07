@@ -20,6 +20,7 @@
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-1": "^6.22.0",
+    "child_process": "^1.0.2",
     "copy-webpack-plugin": "^4.0.1",
     "electron": "^1.6.2",
     "electron-devtools-installer": "^2.1.0",
@@ -42,9 +43,11 @@
   },
   "dependencies": {
     "chai": "^3.5.0",
+    "child_process": "^1.0.2",
     "material-ui": "^0.18.0",
     "menubar": "^5.2.3",
     "react-tap-event-plugin": "^2.0.1",
+    "sleep-mode": "^1.1.0",
     "tiny-timer": "^1.1.1"
   }
 }

@@ -3,6 +3,7 @@ const electron = require('electron');
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;  
 
 const path = require('path');
 const url = require('url');
@@ -13,6 +14,8 @@ const {
 	REDUX_DEVTOOLS
 } = require('electron-devtools-installer');
 
+const SleepModeSleeper = require('./js/core/sleepers/SleepModeSleeper.js')
+const sleeper = new SleepModeSleeper();
 
 var hasBeenSetup = false;
 // Keep a global reference of the window object, if you don't, the window will
@@ -73,3 +76,7 @@ app.on('ready', function() {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.on('sleep', (event, arg)=> {
+	console.log("sleep command received", sleeper);
+	sleeper.sleepNow();
+});
