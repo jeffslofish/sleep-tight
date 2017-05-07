@@ -14,18 +14,24 @@ import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow.js';
 import AvReplay from 'material-ui/svg-icons/av/replay.js';
 
 import Remaining from './remaining'
+import Chooser from './chooser'
 
 
 class Main extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      chosenMilliseconds: 3600000
+    };
+		this.handleOnChosen = this.handleOnChosen.bind(this);
+  }
 	render() {
 		// Note to self, don't forget to run dev & hot!
-		console.log("main.js:render()");
+		console.log("main.js:render()", this.state);
 		var s = {
 			sleep: true,
-			sliderValue: 0.5,
-			leftFormattedTime: "60:00",
-			started: true
 		};
+		
 		return(
 			<div className="row main">
 				<MuiThemeProvider>
@@ -35,15 +41,20 @@ class Main extends Component {
 							<RaisedButton label="Sleep" primary={s.sleep} />
 						</div>
 						<div>
-							<Slider value={s.sliderValue} />
+							<Chooser onChosen={this.handleOnChosen} />
 						</div>
 						<div style={{textAlign:"center"}}>
-							<Remaining />
+							<Remaining allottedMilliseconds={this.state.chosenMilliseconds} />
 						</div>
 					</div>
 				</MuiThemeProvider>
 			</div>
 		)
+	}
+
+	handleOnChosen(chosenMilliseconds) {
+		this.setState({chosenMilliseconds:chosenMilliseconds});
+		console.log("onChosen handled", this.state);
 	}
 }
 

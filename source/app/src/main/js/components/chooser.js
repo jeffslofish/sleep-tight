@@ -11,6 +11,7 @@ class Chooser extends Component {
     this.state = {
       maxMilliseconds: 7200000
     };
+    this.triggerChange = this.triggerChange.bind(this);
   }
 	render() {
 		return(
@@ -20,15 +21,22 @@ class Chooser extends Component {
           max={this.state.maxMilliseconds}
           step={1000}
           value={this.state.chosenMilliseconds}
-          onChanged={this.triggerChange()}
+          onChange={this.triggerChange}
          />
       </div>
 		)
 	}
   triggerChange(event, newValue) {
     if(!this.props.onChosen) return;
+    console.log("onChosen triggerChange", event, newValue);
+    this.setState({
+      chosenMilliseconds:newValue
+    })
     this.props.onChosen(newValue);
   }
 }
 
+Chooser.defaultProps = {
+  onChosen:(ms)=>{console.log("default onChosen ", ms)}
+};
 export default Chooser;

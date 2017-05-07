@@ -16,34 +16,74 @@ import AvReplay from 'material-ui/svg-icons/av/replay.js';
 import SingleTimerDirector from '../core/SingleTimerDirector.js';
 
 import _ from 'lodash'
+import injectTapEventPlugin from 'react-tap-event-plugin'; 
+injectTapEventPlugin();
 
 class Remaining extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      allottedMilliseconds:3600,
-      remainingMilliseconds:0
-    };
     this.internalTimer = {
       startNew:(cb,ms)=>{ this.props.timer.startNew(cb,ms); },
       onTick:(ms)=>{
-        this.tick(ms);
+        //this.tick(ms);
         this.props.timer.onTick(ms);
       },
       stopActive:()=>{this.props.timer.stopActive()}
     }
+    this.state = {
+      allottedMilliseconds:0,
+      remainingMilliseconds:0,
+      started:false
+    };
+
+    this.props.timer.onTick = (ms)=> {
+      this.tick(ms);
+    };
+    
+    this.start = this.start.bind(this);
+    this.pause = this.pause.bind(this);
+    this.restart = this.restart.bind(this);
+    this.renderStateMilliseconds = this.renderStateMilliseconds.bind(this);
+
+    console.log("remaining constructor:", props, this.state);
+  }
+  componentWillReceiveProps(newProps) {
+    this.initiateStartFromNewPropsIfNecessary(newProps);
+    console.log("remaining.componentWillReceiveProps", newProps, this.state);
+  }
+  initiateStartFromNewPropsIfNecessary(newProps) {
+    var remainingMilliseconds = 0,
+      allottedMilliseconds = 0;
+    if(newProps.allottedMilliseconds !== undefined
+      && newProps.allottedMilliseconds > 0) {
+      allottedMilliseconds = newProps.allottedMilliseconds;
+      remainingMilliseconds = newProps.allottedMilliseconds;
+      this.state = {
+        allottedMilliseconds:allottedMilliseconds,
+        remainingMilliseconds:remainingMilliseconds
+      };
+      this.start();
+    }
   }
   tick(milliseconds) {
-    this.state.remainingMilliseconds = milliseconds;
+    console.log("remaining.tick", milliseconds);
+    this.setState({
+      remainingMilliseconds: milliseconds
+    });
   }
   start() {
-    this.state.remainingMilliseconds = this.state.allottedMilliseconds;
+    this.setState({
+      remainingMilliseconds: this.state.allottedMilliseconds,
+      started: true
+    });
     this.internalTimer
       .startNew(()=>{}, this.state.allottedMilliseconds);
-    this.state.started = true;
   }
   pause() {
-    this.state.started = false;
+    this.setState({
+      remainingMilliseconds: this.state.allottedMilliseconds,
+      started: false
+    });
     this.internalTimer.stopActive()
   }
   restart() {
@@ -63,6 +103,7 @@ class Remaining extends Component {
     return this.renderMilliseconds(this.state.remainingMilliseconds);
   }
 	render() {
+    console.log("remaining.render", this.state)
 		return(
       <div>
         <div id="remainingTime">
@@ -72,15 +113,15 @@ class Remaining extends Component {
           {this.state.started ?
           <IconButton id="pause" 
             tooltip="Pause"
-            onTouchTap={this.pause()}>
+            onTouchTap={this.pause}>
             <AvPause />
           </IconButton> :
           <IconButton id="start" tooltip="Start" 
-            onTouchTap={this.start()}>
+            onTouchTap={this.start}>
             <AvPlayArrow />
           </IconButton>}
           <IconButton id="restart" tooltip="Restart"
-            onTouchTap={this.restart()}>
+            onTouchTap={this.restart}>
             <AvReplay />
           </IconButton>
         </div>

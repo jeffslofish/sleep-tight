@@ -2,13 +2,16 @@
 const Timer = require('tiny-timer');
 
 class SingleTimerDirector {
-  constructor() {
+  constructor(customTick) {
     this.activeTimer = null;
     this.tickInterval = 1000;
     this.timeoutClearer = clearTimeout;
     this.activeInterval = null;
     this.intervalClearer = clearInterval;
     this.ticks = 0;
+    if(customTick) {
+      this.onTick = customTick;
+    }
   }
   startNew(callback, milliseconds) {
     this.stopActive();
