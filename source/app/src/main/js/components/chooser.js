@@ -28,7 +28,6 @@ class Chooser extends Component {
 	}
   triggerChange(event, newValue) {
     if(!this.props.onChosen) return;
-    console.log("onChosen triggerChange", event, newValue);
     this.setState({
       chosenMilliseconds:newValue
     })
@@ -37,6 +36,6 @@ class Chooser extends Component {
 }
 
 Chooser.defaultProps = {
-  onChosen:(ms)=>{console.log("default onChosen ", ms)}
+  onChosen:(ms)=>{}
 };
 export default Chooser;

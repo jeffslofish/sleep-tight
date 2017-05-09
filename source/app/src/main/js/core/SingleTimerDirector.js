@@ -18,7 +18,6 @@ class SingleTimerDirector {
     this.activeInterval = this.startInterval();
     
     this.activeTimer.on('done', function() {
-      console.log("done triggered: ", arguments);
       callback();
     });
     this.activeTimer.start(milliseconds, this.tickInterval);
@@ -41,7 +40,6 @@ class SingleTimerDirector {
   startInterval() {
     var self = this;
     this.activeTimer.on('tick', function(ms) {
-      //console.log("tick triggered: ", arguments);
       self.onTick(ms);
     });
   }

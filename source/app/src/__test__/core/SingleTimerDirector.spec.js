@@ -14,7 +14,6 @@ describe('#startNew()', function() {
     var called = false;
     director.tickInterval = 50;
     director.startNew(function() {
-      console.log("callback initiated");
       called = true;
       assert.isNotNull(director.activeTimer);
     }, 100);

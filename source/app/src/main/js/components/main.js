@@ -16,8 +16,7 @@ import AvReplay from 'material-ui/svg-icons/av/replay.js';
 import Remaining from './remaining'
 import Chooser from './chooser'
 import SingleTimerDirector from '../core/SingleTimerDirector'
-
-import { ipcRenderer, remote } from 'electron'; 
+import RendererThreadSignaler from '../core/RendererThreadSignaler'
 
 class Main extends Component {
   constructor(props) {
@@ -30,7 +29,6 @@ class Main extends Component {
   }
 	render() {
 		// Note to self, don't forget to run dev & hot!
-		console.log("main.js:render()", this.state);
 		var s = {
 			sleep: true,
 		};
@@ -60,21 +58,13 @@ class Main extends Component {
 
 	handleOnChosen(chosenMilliseconds) {
 		this.setState({chosenMilliseconds:chosenMilliseconds});
-		console.log("onChosen handled", this.state);
 	}
 	handleOnFinished() {
-		this.props.sleeper.sleepNow();
+		this.props.signaler.sendSignal();
 	}
 }
 
 Main.defaultProps = {
-  sleeper:{
-		sleepNow:()=> {
-			console.log("sending sleep command")
-			ipcRenderer.send('sleep', {
-				something:"i guess"
-			})
-		}
-	}
+  signaler:new RendererThreadSignaler()
 };
 export default Main;

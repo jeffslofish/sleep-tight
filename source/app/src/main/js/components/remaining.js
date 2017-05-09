@@ -138,7 +138,7 @@ class Remaining extends Component {
 
 Remaining.defaultProps = {
   timer:new SingleTimerDirector(),
-  onFinished:function() { console.log("default unfinished"); }
+  onFinished:()=> { }
 };
 
 export default Remaining;
