@@ -24,12 +24,9 @@ class Remaining extends Component {
     super(props);
     this.internalTimer = {
       startNew:(cb,ms)=>{ this.props.timer.startNew(cb,ms); },
-      onTick:(ms)=>{
-        //this.tick(ms);
-        this.props.timer.onTick(ms);
-      },
-      stopActive:()=>{this.props.timer.stopActive()}
-    }
+      onTick:(ms)=>{ this.props.timer.onTick(ms); },
+      stopActive:()=>{ this.props.timer.stopActive(); }
+    };
     this.state = {
       allottedMilliseconds:0,
       remainingMilliseconds:0,
@@ -44,12 +41,10 @@ class Remaining extends Component {
     this.pause = this.pause.bind(this);
     this.restart = this.restart.bind(this);
     this.renderStateMilliseconds = this.renderStateMilliseconds.bind(this);
-
-    console.log("remaining constructor:", props, this.state);
+    this.finish = this.finish.bind(this);
   }
   componentWillReceiveProps(newProps) {
     this.initiateStartFromNewPropsIfNecessary(newProps);
-    console.log("remaining.componentWillReceiveProps", newProps, this.state);
   }
   initiateStartFromNewPropsIfNecessary(newProps) {
     var remainingMilliseconds = 0,
@@ -66,30 +61,42 @@ class Remaining extends Component {
     }
   }
   tick(milliseconds) {
-    console.log("remaining.tick", milliseconds);
     this.setState({
       remainingMilliseconds: milliseconds
     });
   }
   start() {
+    var remaining = this.state.remainingMilliseconds;
+    if(remaining == 0) {
+      remaining = this.state.allottedMilliseconds;
+    }
     this.setState({
-      remainingMilliseconds: this.state.allottedMilliseconds,
+      remainingMilliseconds: remaining,
       started: true
     });
     this.internalTimer
-      .startNew(this.props.onFinished, this.state.allottedMilliseconds);
+      .startNew(this.finish, remaining);
   }
   pause() {
     this.setState({
-      remainingMilliseconds: this.state.allottedMilliseconds,
       started: false
     });
     this.internalTimer.stopActive()
   }
   restart() {
-    this.start();
+    this.pause();
+    this.setState({
+      remainingMilliseconds:this.state.allottedMilliseconds
+    }, ()=> {
+      this.start();
+    });
   }
-
+  finish() {
+    this.setState({
+      started: false
+    });
+    this.props.onFinished();
+  }
   parsePad(i) {
     return _.padStart(parseInt(i), 2, "0");
   }
@@ -103,7 +110,6 @@ class Remaining extends Component {
     return this.renderMilliseconds(this.state.remainingMilliseconds);
   }
 	render() {
-    console.log("remaining.render", this.state)
 		return(
       <div>
         <div id="remainingTime">

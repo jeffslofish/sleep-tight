@@ -15,7 +15,7 @@ class SingleTimerDirector {
     var self = this;
 
     this.activeTimer = new Timer();
-    this.activeInterval = this.startInterval();    
+    this.activeInterval = this.startInterval();
     
     this.activeTimer.on('done', function() {
       console.log("done triggered: ", arguments);

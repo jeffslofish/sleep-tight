@@ -15,6 +15,12 @@ function setup() {
 	return wrapper;
 }
 
+function spyTimer() {
+	return {
+		startNew:jest.fn(),
+		stopActive:jest.fn(),
+	};
+}
 describe('components', () => {
 	describe('Remaining', () => {
 		it('should render AvPlayArrow when state.started is false', () => {
@@ -92,14 +98,32 @@ describe('components', () => {
 				wrapper.instance().start();
 				expect(wrapper.state().started).toBe(true);
 			});
-			if('should set state.remainingMilliseconds to state.allottedMilliseconds', ()=> {
+			if('should set state.remainingMilliseconds to state.allottedMilliseconds when state.remainingMilliseconds is 0', ()=> {
 				const wrapper = setup(),
 					allottedMilliseconds = 3253;
 				wrapper.setState({started: false, 
+					remainingMilliseconds:0,
 					allottedMilliseconds:allottedMilliseconds});
 				wrapper.instance().start();
 				expect(wrapper.state().allottedMilliseconds)
 					.toBe(allottedMilliseconds);
+			});
+			if('should set not change state.remainingMilliseconds or state.allottedMilliseconds if is not equal to 0', ()=> {
+				const wrapper = setup({
+					// Set the timer to fakes so it doesn't start ticking
+					props:{timer:spytimer()}
+				}),
+					allottedMilliseconds = 3253,
+					remainingMilliseconds = 2222;
+				
+				wrapper.setState({started: false, 
+					remainingMilliseconds:remainingMilliseconds,
+					allottedMilliseconds:allottedMilliseconds});
+				wrapper.instance().start();
+				expect(wrapper.state().allottedMilliseconds)
+					.toBe(allottedMilliseconds);
+				expect(wrapper.state().remainingMilliseconds)
+					.toBe(remainingMilliseconds);
 			});
 			it('should call props.timer.startNew with state.allottedMilliseconds', ()=> {
 				const allottedMilliseconds = 90210;
@@ -118,21 +142,18 @@ describe('components', () => {
 				expect(shouldBeCalled)
 					.toHaveBeenCalledWith(expect.any(Function), allottedMilliseconds);
 			});
-			it('should pass props.onFinished to startNew as callback', ()=> {const allottedMilliseconds = 90210;
-				var props = {
-					timer:{
-						stopActive:jest.fn(),
-						startNew:jest.fn()
-					},
-					onFinished:jest.fn()
-				};
-				const remaining = shallow(<Remaining {...props}/>);
+			it('should call props.timer.startNew with state.remainingMilliseconds when state.remainingMilliseconds is not equal to 0', ()=> {
+				const allottedMilliseconds = 90210,
+					remainingMilliseconds = 33033;
+				var props = { timer:spyTimer() };
+				const remaining = shallow(<Remaining timer={props.timer}/>);
 				remaining.setState({
-					allottedMilliseconds:allottedMilliseconds
+					allottedMilliseconds: allottedMilliseconds,
+					remainingMilliseconds: remainingMilliseconds
 				});
 				remaining.instance().start();
 				expect(props.timer.startNew)
-					.toHaveBeenCalledWith(props.onFinished, allottedMilliseconds);
+					.toHaveBeenCalledWith(expect.any(Function), remainingMilliseconds);
 			});
 		});
 		describe('tick', ()=> {
@@ -176,7 +197,7 @@ describe('components', () => {
 				const wrapper = shallow( < Remaining timer={props.timer} /> ),
 					allottedMilliseconds = 65000;
 				wrapper.setState({allottedMilliseconds: allottedMilliseconds
-					, remainingMilliseconds: 0});
+					, remainingMilliseconds: 2000});
 				wrapper.instance().restart();
 				expect(wrapper.state().remainingMilliseconds).toBe(allottedMilliseconds);
 			});
@@ -192,5 +213,15 @@ describe('components', () => {
 				expect(props.timer.startNew).toHaveBeenCalled();
 			});
 		});
-	})
-})
+		describe('finish', ()=> {
+			it('should set state.started to false and trigger props.onFinished', ()=> {
+				const props = { timer: spyTimer(), onFinished:jest.fn() };
+				const wrapper = shallow(<Remaining {...props}/>);
+				wrapper.setState({started:true});
+				wrapper.instance().finish();
+				expect(props.onFinished).toHaveBeenCalled();
+				expect(wrapper.state().started).toBe(false);
+			});
+		});
+	});
+});
