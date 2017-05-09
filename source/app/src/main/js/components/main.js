@@ -19,18 +19,19 @@ import SingleTimerDirector from '../core/SingleTimerDirector'
 import RendererThreadSignaler from '../core/RendererThreadSignaler'
 
 class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      chosenMilliseconds: 3600000
-    };
+	constructor(props) {
+		super(props);
+		this.state = {
+			chosenMilliseconds: 3600000,
+			shouldSleep: true
+		};
 		this.handleOnChosen = this.handleOnChosen.bind(this);
 		this.handleOnFinished = this.handleOnFinished.bind(this);
-  }
+	}
 	render() {
 		// Note to self, don't forget to run dev & hot!
 		var s = {
-			sleep: true,
+			sleep: this.state.shouldSleep,
 		};
 		
 		return(
@@ -60,11 +61,16 @@ class Main extends Component {
 		this.setState({chosenMilliseconds:chosenMilliseconds});
 	}
 	handleOnFinished() {
-		this.props.signaler.sendSignal();
+		var shouldSleep = this.state.shouldSleep; 
+		if(shouldSleep) {
+			this.props.signaler.sleep();
+		} else {
+			this.props.signaler.shutdown();
+		}
 	}
 }
 
 Main.defaultProps = {
-  signaler:new RendererThreadSignaler()
+	signaler:new RendererThreadSignaler()
 };
 export default Main;

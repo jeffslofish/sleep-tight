@@ -1,4 +1,5 @@
 import RendererThreadSignaler from '../../main/js/core/rendererThreadSignaler'
+import Commands from '../../main/js/core/commands'
 import ipcRenderer from 'electron';
 
 describe('rendererThreadSignaler', () => {
@@ -8,19 +9,28 @@ describe('rendererThreadSignaler', () => {
     actually a way to test this but it wasn't valuable enough
     to pursue too deeply. */
 
-    it('should default command name to sleep-tight.signal', ()=> {
+    it('should default commands to instance of Commands', ()=> {
       const handler = new RendererThreadSignaler();
-      expect(handler.commandName).toBe("sleep-tight.signal");
+      expect(handler.commands).toBeInstanceOf(Commands);
     });
   });
   
-  describe('sendSignal', () => {
-    it('should call renderer.send with commandName', () => {
+  describe('sleep', () => {
+    it('should call renderer.send with commands.sleep', () => {
       const handler = new RendererThreadSignaler();
-      handler.commandName = "mock.signal";
+      handler.commands.sleep = "mock.sleep";
       handler.renderer = {send:jest.fn()};
-      handler.sendSignal();
-      expect(handler.renderer.send).toHaveBeenCalledWith(handler.commandName);
+      handler.sleep();
+      expect(handler.renderer.send).toHaveBeenCalledWith(handler.commands.sleep);
+    });
+  });
+  describe('shutdown', () => {
+    it('should call renderer.send with commands.shutdown', () => {
+      const handler = new RendererThreadSignaler();
+      handler.commands.sleep = "mock.shutdown";
+      handler.renderer = {send:jest.fn()};
+      handler.shutdown();
+      expect(handler.renderer.send).toHaveBeenCalledWith(handler.commands.shutdown);
     });
   });
 });

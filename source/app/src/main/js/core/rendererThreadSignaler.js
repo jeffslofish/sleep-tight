@@ -1,12 +1,16 @@
 import { ipcRenderer, remote } from 'electron';
+import Commands from './commands'
 
 class RendererThreadSignaler {
   constructor() {
     this.renderer = ipcRenderer;
-    this.commandName = "sleep-tight.signal"
+    this.commands = new Commands();
   }
-  sendSignal() {
-    this.renderer.send(this.commandName);
+  sleep() {
+    this.renderer.send(this.commands.sleep);
+  }
+  shutdown() {
+    this.renderer.send(this.commands.shutdown);
   }
 }
 export default RendererThreadSignaler;
