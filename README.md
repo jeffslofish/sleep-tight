@@ -6,4 +6,4 @@ Aims to be a crossplatform menubar based sleep/shutdown scheduler.
 2. `cd sleep-tight/source`
 3. `npm install`
 4. `npm run hot` 
-
+5. `npm run dev`
